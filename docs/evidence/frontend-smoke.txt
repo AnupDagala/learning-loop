@@ -1,0 +1,3 @@
+13 frontend/API smoke checks passed.
+Uses Node VM and minimal DOM adapter against live local HTTP server.
+Browser layout, accessibility and CSP remain unverified.
