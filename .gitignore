@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+data/
+*.sqlite3*
+node_modules/
+.playwright/
+.DS_Store
