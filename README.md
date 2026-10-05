@@ -39,14 +39,14 @@ Read the [product case study](docs/product-case-study.md), [research plan](docs/
 
 ## Tests
 
-Verified here: **38 backend/HTTP tests and 13 frontend/API smoke checks**. Actual browser checks and live PostHog ingestion remain unverified.
+Verified here: **38 backend/HTTP tests and 13 frontend/API smoke checks**. GitHub Actions also passed **23 Chromium browser checks** on desktop and mobile. [Verified CI run](https://github.com/AnupDagala/learning-loop/actions/runs/37316791557) at commit `c23c6bf`. Live PostHog ingestion remains unverified.
 
 ```sh
 python -m unittest discover -s tests -v
 python -m compileall -q content.py engine.py server.py telemetry.py
 ```
 
-Browser checks (Node 22+; supplied harness, **not executed successfully here** because Chromium download was unavailable):
+Browser checks (Node 22+):
 
 ```sh
 npm install --no-save --package-lock=false playwright@1.62.1
@@ -59,7 +59,7 @@ node tests/browser.cjs
 
 With the server ready, `node tests/frontend-smoke.cjs` runs the dependency-free JavaScript/API smoke checks (minimal DOM adapter; not a browser).
 
-`TEST_URL` can override the URL. `RECORD_VIDEO=1` enables recording. GitHub Actions defines both test jobs; remote CI status is not claimed until a run is observed.
+`TEST_URL` can override the URL. `RECORD_VIDEO=1` enables recording. GitHub Actions defines both test jobs; backend and browser jobs passed at `c23c6bf`.
 
 ## Optional PostHog relay
 
