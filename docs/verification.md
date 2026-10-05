@@ -9,14 +9,20 @@
 
 Evidence: `docs/evidence/backend-tests.txt`, `frontend-smoke.txt`, `analytics-snapshot.json`.
 
+## Verified in GitHub Actions
+
+Commit `c23c6bf` passed both jobs: 38 backend tests and **23 Chromium browser checks** covering desktop/mobile learning, server grading, saved plans, revision, dataset separation, consent save/revocation, mobile overflow and absence of browser/CSP errors. The consent checks wait for the completed save rather than racing the request.
+
+[Verified run](https://github.com/AnupDagala/learning-loop/actions/runs/37316791557). Screenshots and browser-results JSON are available in its browser-evidence artifact.
+
 ## Unverified
 
-- Actual browser layout, keyboard/accessibility behavior and CSP execution. `tests/browser.cjs` supplies the complete browser harness; execution was blocked because no Chromium binary was installed and download attempts did not return a valid archive. No browser screenshots or video are claimed.
-- Live PostHog ingestion/deduplication, external model calls, public deployment and remote CI execution.
+- A full accessibility audit and visual review of every possible state. Chromium could not be downloaded locally; the browser harness was instead executed successfully in GitHub Actions. No video is claimed.
+- Live PostHog ingestion/deduplication, external model calls and public application deployment.
 - Interviews, actual learner behavior, retention improvement, transfer learning gains or demand.
 
 ## Reproduce
 
 Run `python -m unittest discover -s tests -v`. Start a seeded server at port 8765 and run `node tests/frontend-smoke.cjs`. See README for Playwright setup and `tests/browser.cjs`. Use a fresh database for browser checks: the script expects no mature local retention cohorts.
 
-The GitHub workflow is included but publication/remote status must be confirmed separately. No secrets or local SQLite database are included in the source package.
+The source is published publicly; the linked CI run verifies the application and browser harness before this documentation update. No secrets or local SQLite database are included in the source package.
