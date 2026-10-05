@@ -1,0 +1,44 @@
+// npm install --no-save playwright@1.62.1; npx playwright install chromium
+// Start server separately; TEST_URL defaults to localhost:8765.
+const {chromium}=require('playwright');
+const fs=require('fs');const path=require('path');
+const root=path.resolve(__dirname,'..');const evidence=path.join(root,'docs/evidence');fs.mkdirSync(evidence,{recursive:true});
+(async()=>{
+ const browser=await chromium.launch({headless:true,args:['--no-sandbox']});let checks=0;const errors=[];
+ const context=await browser.newContext({viewport:{width:1440,height:1050},recordVideo:process.env.RECORD_VIDEO?{dir:path.join(evidence,'video'),size:{width:1280,height:900}}:undefined});
+ const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+ const check=(condition,msg)=>{if(!condition)throw new Error(msg);checks++;};
+ await page.goto(process.env.TEST_URL||'http://127.0.0.1:8765');await page.getByRole('heading',{name:/Build the understanding/}).waitFor();
+ check(await page.getByRole('button',{name:'Start lesson →'}).count()===2,'Two original lessons');
+ await page.screenshot({path:path.join(evidence,'01-home.png'),fullPage:true});
+ const session=await page.evaluate(()=>fetch('/api/session').then(r=>r.json()));
+ check(session.consent===0,'External analytics default off');check(['control','recovery'].includes(session.variant),'Stable variant assigned');
+ await page.getByRole('button',{name:'Start lesson →'}).first().click();await page.getByRole('heading',{name:'Equality has two parts'}).waitFor();checks++;
+ await page.getByRole('button',{name:'Ready? Try three questions →'}).click();await page.getByRole('button',{name:'Check my understanding →'}).waitFor();checks++;
+ await page.locator('input[name=q0][value="0"]').check();await page.locator('input[name=q1][value="0"]').check();await page.locator('input[name=q2][value="2"]').check();
+ await page.getByRole('button',{name:'Check my understanding →'}).click();await page.getByRole('heading',{name:'Your mistakes have a next step.'}).waitFor();
+ check(await page.locator('.score').innerText()==='2/3','Server feedback score');check(await page.getByText('Revisit · Reasonable classification',{exact:true}).count()===1,'Named learning gap');
+ await page.screenshot({path:path.join(evidence,'02-feedback.png'),fullPage:true});
+ await page.getByRole('button',{name:'Save my next session →'}).click();await page.getByRole('button',{name:'Open revision →'}).waitFor();checks++;
+ await page.reload();await page.getByRole('button',{name:'Open revision →'}).waitFor();checks++;
+ check((await page.evaluate(()=>fetch('/api/session').then(r=>r.json()))).variant===session.variant,'Variant survives reload');
+ await page.getByRole('button',{name:'Open revision →'}).click();await page.getByRole('button',{name:'Complete revision →'}).waitFor();
+ for(const [i,v] of [[0,1],[1,0],[2,2]])await page.locator(`input[name=q${i}][value="${v}"]`).check();
+ await page.getByRole('button',{name:'Complete revision →'}).click();await page.getByRole('heading',{name:'Revision score: 3/3'}).waitFor();checks++;
+ check(await page.getByText(/Same-day practice does not count/).count()===1,'No false D1 claim');
+ await page.getByRole('button',{name:'Product insights',exact:true}).click();await page.getByRole('heading',{name:/Measure the loop/}).waitFor();
+ const demo=await page.evaluate(()=>fetch('/api/analytics?source=synthetic').then(r=>r.json()));
+ check(demo.funnel.reduce((n,r)=>n+r.started,0)===120,'Seeded funnel 120 journeys');check(demo.funnel.reduce((n,r)=>n+r.saved,0)===54,'Seeded saves 54');check(demo.retention.reduce((n,r)=>n+r.returned,0)===30,'Seeded D1 returns 30');
+ await page.screenshot({path:path.join(evidence,'03-insights.png'),fullPage:true});
+ await page.getByLabel('Dataset',{exact:true}).selectOption('local');await page.getByText('Anonymous activity on this local instance; no causal conclusion.').waitFor();checks++;
+ const live=await page.evaluate(()=>fetch('/api/analytics?source=local').then(r=>r.json()));check(live.funnel.reduce((n,r)=>n+r.saved,0)>=1,'Actual browser funnel saved');check(live.retention.length===0,'Same-day learner excluded from D1');
+ await page.getByRole('button',{name:'Analytics preferences'}).click();await page.getByRole('dialog').waitFor();await page.getByLabel('Allow future activity').check();await page.getByRole('button',{name:'Save preference'}).click();
+ check((await page.evaluate(()=>fetch('/api/session').then(r=>r.json()))).consent===1,'Opt-in persists');
+ await page.getByRole('button',{name:'Analytics preferences'}).click();await page.getByLabel('Allow future activity').uncheck();await page.getByRole('button',{name:'Save preference'}).click();check((await page.evaluate(()=>fetch('/api/session').then(r=>r.json()))).consent===0,'Revoke persists');
+ const mobile=await browser.newContext({viewport:{width:390,height:844}});const mp=await mobile.newPage();await mp.goto(process.env.TEST_URL||'http://127.0.0.1:8765');await mp.getByRole('heading',{name:/Build the understanding/}).waitFor();
+ check(await mp.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Mobile no horizontal overflow');await mp.screenshot({path:path.join(evidence,'04-mobile.png'),fullPage:true});
+ await mp.getByRole('button',{name:'Start lesson →'}).nth(1).click();await mp.getByRole('button',{name:'Ready? Try three questions →'}).click();for(const [i,v] of [[0,0],[1,1],[2,2]])await mp.locator(`input[name=q${i}][value="${v}"]`).check();await mp.getByRole('button',{name:'Check my understanding →'}).click();await mp.getByRole('heading',{name:'You’ve got the key ideas.'}).waitFor();checks++;
+ check(errors.length===0,'No browser or CSP errors: '+errors.join('; '));
+ await mobile.close();await context.close();await browser.close();
+ fs.writeFileSync(path.join(evidence,'browser-results.json'),JSON.stringify({checks,errors,viewports:['1440x1050','390x844'],mode:'local browser; synthetic analytics separate'},null,2));console.log(`${checks} browser checks passed`);
+})().catch(e=>{console.error(e);process.exit(1);});
