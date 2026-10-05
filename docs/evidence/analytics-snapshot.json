@@ -1,0 +1,60 @@
+{
+  "synthetic": {
+    "source": "synthetic",
+    "funnel": [
+      {
+        "variant": "control",
+        "started": 60,
+        "quiz": 45,
+        "feedback": 38,
+        "saved": 20
+      },
+      {
+        "variant": "recovery",
+        "started": 60,
+        "quiz": 48,
+        "feedback": 44,
+        "saved": 34
+      }
+    ],
+    "retention": [
+      {
+        "cohort": "2026-09-28",
+        "variant": "control",
+        "eligible": 60,
+        "returned": 12
+      },
+      {
+        "cohort": "2026-09-28",
+        "variant": "recovery",
+        "eligible": 60,
+        "returned": 18
+      }
+    ],
+    "events": 379,
+    "outbox_pending": 0,
+    "as_of": "2026-10-05T11:34:56.249101+00:00",
+    "unit": "journeys",
+    "retention_definition": "Next UTC calendar day; fully elapsed D1 cohorts only",
+    "notice": "Synthetic illustration, not research or measured product uplift."
+  },
+  "local": {
+    "source": "local",
+    "funnel": [
+      {
+        "variant": "recovery",
+        "started": 1,
+        "quiz": 1,
+        "feedback": 1,
+        "saved": 1
+      }
+    ],
+    "retention": [],
+    "events": 5,
+    "outbox_pending": 0,
+    "as_of": "2026-10-05T11:34:56.250725+00:00",
+    "unit": "journeys",
+    "retention_definition": "Next UTC calendar day; fully elapsed D1 cohorts only",
+    "notice": "Anonymous activity on this local instance; no causal conclusion."
+  }
+}
