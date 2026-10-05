@@ -1,0 +1,43 @@
+test_d1_exact_calendar_day (test_engine.DomainTests.test_d1_exact_calendar_day) ... ok
+test_domain_transaction_rolls_back (test_engine.DomainTests.test_domain_transaction_rolls_back) ... ok
+test_event_uuid_deduplicates (test_engine.DomainTests.test_event_uuid_deduplicates) ... ok
+test_feedback_required_before_plan (test_engine.DomainTests.test_feedback_required_before_plan) ... ok
+test_funnel_cannot_mix_journeys (test_engine.DomainTests.test_funnel_cannot_mix_journeys) ... ok
+test_funnel_has_24h_window (test_engine.DomainTests.test_funnel_has_24h_window) ... ok
+test_immature_cohorts_excluded (test_engine.DomainTests.test_immature_cohorts_excluded) ... ok
+test_invalid_answers (test_engine.DomainTests.test_invalid_answers) ... ok
+test_no_external_outbox_without_consent (test_engine.DomainTests.test_no_external_outbox_without_consent) ... ok
+test_no_submission_without_started_lesson (test_engine.DomainTests.test_no_submission_without_started_lesson) ... ok
+test_ordered_funnel_rejects_early_feedback (test_engine.DomainTests.test_ordered_funnel_rejects_early_feedback) ... ok
+test_other_learner_cannot_read_attempt (test_engine.DomainTests.test_other_learner_cannot_read_attempt) ... ok
+test_perfect_score_has_no_gaps (test_engine.DomainTests.test_perfect_score_has_no_gaps) ... ok
+test_plan_retry_preserves_due_time (test_engine.DomainTests.test_plan_retry_preserves_due_time) ... ok
+test_posthog_disabled_without_token (test_engine.DomainTests.test_posthog_disabled_without_token) ... ok
+test_posthog_failure_retries_without_losing_event (test_engine.DomainTests.test_posthog_failure_retries_without_losing_event) ... ok
+test_posthog_host_allowlist (test_engine.DomainTests.test_posthog_host_allowlist) ... ok
+test_posthog_mock_payload_and_success (test_engine.DomainTests.test_posthog_mock_payload_and_success) ... ok
+test_posthog_revoke_blocks_queued_send (test_engine.DomainTests.test_posthog_revoke_blocks_queued_send) ... ok
+test_retry_conflicting_payload_rejected (test_engine.DomainTests.test_retry_conflicting_payload_rejected) ... ok
+test_revision_once_only (test_engine.DomainTests.test_revision_once_only) ... ok
+test_revision_rejects_invalid_answers (test_engine.DomainTests.test_revision_rejects_invalid_answers) ... ok
+test_server_grades_and_names_gaps (test_engine.DomainTests.test_server_grades_and_names_gaps) ... ok
+test_submit_retry_does_not_duplicate (test_engine.DomainTests.test_submit_retry_does_not_duplicate) ... ok
+test_synthetic_seed_is_separate_and_idempotent (test_engine.DomainTests.test_synthetic_seed_is_separate_and_idempotent) ... ok
+test_analytics_source_rejected (test_http.HTTPTests.test_analytics_source_rejected) ... ok
+test_concurrent_retries_grade_once (test_http.HTTPTests.test_concurrent_retries_grade_once) ... ok
+test_consent_requires_boolean (test_http.HTTPTests.test_consent_requires_boolean) ... ok
+test_cross_origin_rejected (test_http.HTTPTests.test_cross_origin_rejected) ... ok
+test_full_journey_and_restart_state (test_http.HTTPTests.test_full_journey_and_restart_state) ... ok
+test_invalid_uuid_and_unknown_lesson (test_http.HTTPTests.test_invalid_uuid_and_unknown_lesson) ... ok
+test_journey_lesson_cannot_change (test_http.HTTPTests.test_journey_lesson_cannot_change) ... ok
+test_large_payload_rejected (test_http.HTTPTests.test_large_payload_rejected) ... ok
+test_missing_session_rejected (test_http.HTTPTests.test_missing_session_rejected) ... ok
+test_no_path_traversal (test_http.HTTPTests.test_no_path_traversal) ... ok
+test_other_session_cannot_access_feedback (test_http.HTTPTests.test_other_session_cannot_access_feedback) ... ok
+test_public_questions_have_no_answer_keys (test_http.HTTPTests.test_public_questions_have_no_answer_keys) ... ok
+test_revocation_removes_pending_outbox (test_http.HTTPTests.test_revocation_removes_pending_outbox) ... ok
+
+----------------------------------------------------------------------
+Ran 38 tests in 6.631s
+
+OK
